@@ -32,8 +32,8 @@ function calculateBonusByProfit(index, total, seller) {
     return profit * 0.10;
   }
 
-  else if (index === -1) {
-    return profit * 0.10;
+  else if (index === total -1) {
+    return 0;
   }
 
   else {
@@ -103,7 +103,7 @@ function analyzeSalesData(data, options) {
   const productIndex = {};
 
   data.products.forEach(product => {
-    productIndex[product.sky] = product;
+    productIndex[product.sku] = product;
   });
 
   // @TODO: Расчет выручки и прибыли для каждого продавца
@@ -116,15 +116,19 @@ data.purchase_records.forEach(record => {
 
   seller.revenue += record.total_amount;
 
+
   record.items.forEach(item => {
     const product = productIndex[item.sku];
 
     if (!product) return;
 
-    const cost = product.purchase_price * item.quantity;
+    
 
     const revenue = calculateRevenue(item, product);
 
+    const cost = product.purchase_price * item.quantity;
+
+    
     const profit = revenue - cost;
 
     seller.profit += profit;
